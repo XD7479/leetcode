@@ -1,3 +1,7 @@
+#include <cstdlib>
+#include <cstio>
+#include <vector>
+
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
