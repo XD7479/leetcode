@@ -168,3 +168,32 @@ res = [0 for i in range(len(s)+1)]
   
   return res[-1]
 ```
+
+
+#### 621. [Task Scheduler](https://leetcode-cn.com/problems/task-scheduler/)
+模拟CPU调度策略。
+大佬的解题思路描述的很清晰：
+1. 将任务按类型分组，正好A-Z用一个int[26]保存任务类型个数
+2. 对数组进行排序，优先排列个数（count）最大的任务，如题得到的时间至少为 retCount =（count-1）* (n+1) + 1 ==> A->X->X->A->X->X->A(X为其他任务或者待命)
+3. 再排序下一个任务，如果下一个任务B个数和最大任务数一致，则retCount++ ==> A->B->X->A->B->X->A->B
+4. 如果空位都插满之后还有任务，那就随便在这些间隔里面插入就可以，因为间隔长度肯定会大于n，在这种情况下就是任务的总数是最小所需时间
+
+```python
+count = {}
+for task in tasks:
+    if task not in count:
+        count[task] = 1
+    else:
+        count[task] += 1
+
+count = sorted(list(count.values()), reverse=True)
+
+minC = count[0] * (n+1) - n
+
+i = 1
+while i < len(count) and count[i] == count[i-1]:
+    minC += 1
+    i += 1
+
+return max(minC, sum(count))
+```
