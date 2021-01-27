@@ -147,7 +147,7 @@ while l < r:
 ```
 
 #### 91. [Decode Ways](https://leetcode-cn.com/problems/decode-ways/)
-经典二阶DP，需要注意的是 0 不能单独解码，也不能作为前缀，判断下 0 前面如果不是1 or 2，直接 return False 就可以了。
+经典二阶DP，需要注意的是 0 不能单独解码，也不能作为前缀，判断下 0 前面如果不是1 or 2，res[i] 就没有解法。
 ```python
 res = [0 for i in range(len(s)+1)]
 
