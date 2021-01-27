@@ -196,4 +196,8 @@ while i < len(count) and count[i] == count[i-1]:
     i += 1
 
 return max(minC, sum(count))
+
+# 关于 dict:
+# dict.items(): return all items in dict as a list of tuple, tuple 不可被赋值!
+# dict.keys(), dict.values() 
 ```
