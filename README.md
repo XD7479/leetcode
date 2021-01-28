@@ -201,3 +201,73 @@ return max(minC, sum(count))
 # dict.items(): return all items in dict as a list of tuple, tuple 不可被赋值!
 # dict.keys(), dict.values() 
 ```
+
+
+#### 278. [First Bad Version](https://leetcode-cn.com/problems/first-bad-version/)
+二分查找。
+
+#### 253. [Meeting Rooms II](https://leetcode-cn.com/problems/meeting-rooms-ii/)
+Given an array of meeting time intervals intervals where $intervals[i] = [start_i, end_i],$ return the minimum number of conference rooms required.
+
+Example 1:
+```
+Input: intervals = [[0,30],[5,10],[15,20]]
+Output: 2
+```
+
+- 解法一：贪心+小根堆 $O(NlogN)$
+先需要对 $intervals$ 按 $start[i]$ 从小到大排列。
+维护一个小根堆，堆的节点表示房间，键值是 $end[i]$。
+然后对每个会议，检查堆顶元素 $heap[0]$：
+1. 若堆顶会议已结束（$heap[0] <= start[i]$），则该房间空闲，将新的会议 $end[i]$ 替换堆顶。
+2. 若会议未结束（$heap[0] > start[i]$），则该房间不空闲，开新房间，将新的会议 $end[i]$ 放入堆中。
+```python
+heap = []
+max_count = 0
+
+intervals = sorted(intervals, key = lambda x: x[0])
+
+for inter in intervals:
+    if not heap:
+        heapq.heappush(heap, inter[1])
+        max_count = 1
+        continue
+    
+    if inter[0] >= heap[0]:
+        heapq.heapreplace(heap, inter[1])
+    else:
+        heapq.heappush(heap, inter[1])
+
+    if len(heap) > max_count:
+        max_count = len(heap)
+
+return max_count
+```
+- 解法二：$O(NlogN)$ 
+比较巧妙。由于只需要考虑最小需要的房间数，不用考虑是哪些会议在此刻占用了房间，所以 $star[i], end[i]$ 没有必要关联。对任意 $i$, 我们只需要知道在 $start[i]$ 时有一个会议开始，$count ++;$ 在 $end[i]$ 时刻有一个会议结束，$count --;$ 就可以了。
+```python
+count, max_count = 0, 0
+# intervals = np.array(intervals)
+# starts = np.sort(intervals[:,0])
+# ends = np.sort(intervals[:,1])
+
+starts = [x[0] for x in intervals]
+ends = [x[1] for x in intervals]
+starts = sorted(starts)
+ends = sorted(ends)
+
+i, j = 0, 0
+# while i < starts.shape[0]:
+while i < len(starts):
+    if starts[i] < ends[j]:
+        count += 1
+        if max_count < count:
+            max_count = count
+        i += 1
+    elif starts[i] > ends[j]:
+        count -= 1
+        j += 1
+    else:
+        i, j = i+1, j+1
+```
+
